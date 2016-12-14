@@ -1,0 +1,38 @@
+#!/usr/local/bin/bash
+
+#
+# Copyright (c) 2016 Joyent Inc., All rights reserved.
+#
+# Common variables used by scripts in /lib/smartdc
+
+# location of binaries that functions use
+LOGGER=/usr/bin/logger
+MDATA_GET='/usr/sbin/mdata-get'
+
+# Log output
+LOG='/var/log/triton.log'
+if [[ ! -e $LOG ]] ; then
+  touch $LOG
+fi
+
+exec 4<> $LOG
+export PS4='[\D{%FT%TZ}] ${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+export BASH_XTRACEFD=4
+set -o xtrace
+
+
+# Common functions used by scripts /lib/smartdc
+
+lib_triton_fatal() {
+  echo "(fatal) - $0 - $@"
+  $LOGGER "(fatal) - $0 - $@"
+  exit 1
+}
+
+lib_triton_info() {
+  echo "(info) - $0 - $@"
+  $LOGGER "(info) - $0 - $@"
+}
+
+export -f lib_triton_fatal
+export -f lib_triton_info
